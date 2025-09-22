@@ -1,4 +1,4 @@
-
+import './globals.css';
 import Link from 'next/link';
 
 export const metadata = { title: "Uploadia", description: "Bulk-upload Etsy draft listings" };
