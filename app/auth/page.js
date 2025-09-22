@@ -1,4 +1,10 @@
+export const dynamic = 'force-dynamic';
 
+if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  export default function AuthPlaceholder() {
+    return <div>Auth temporarily disabled. Configure Supabase to enable login.</div>;
+  }
+}
 'use client';
 import { useState } from 'react';
 import { supabase } from '../../lib/supabase';
