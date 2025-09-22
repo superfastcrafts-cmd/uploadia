@@ -12,7 +12,7 @@ export default function AuthPage() {
     );
   }
 
-  // (Real auth UI will go here once Supabase is connected)
+  // Placeholder for actual Supabase login
   return (
     <div className="card max-w-md mx-auto">
       <h1 className="text-xl font-bold mb-2">Sign in</h1>
