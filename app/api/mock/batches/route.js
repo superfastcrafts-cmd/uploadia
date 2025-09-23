@@ -1,8 +1,7 @@
-
 export async function GET() {
-  const batches = [
-    { id: 'abc123', name: 'September Uploads', status: 'running', total: 10, success: 6, failed: 1 },
-    { id: 'xyz789', name: 'Test Batch', status: 'done', total: 3, success: 3, failed: 0 }
+  const data = [
+    { id: 'batch-1', name: 'Sample Batch A', items: 5 },
+    { id: 'batch-2', name: 'Sample Batch B', items: 12 },
   ];
-  return Response.json({ batches });
+  return new Response(JSON.stringify(data), { headers: { 'content-type': 'application/json' } });
 }
