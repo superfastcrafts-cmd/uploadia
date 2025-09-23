@@ -1,6 +1,5 @@
 cat > app/batches/[id]/page.js <<'EOF'
 import getBaseUrl from '@/lib/baseUrl';
-
 export const dynamic = 'force-dynamic';
 
 async function fetchBatch(id) {

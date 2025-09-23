@@ -1,6 +1,5 @@
 cat > app/dashboard/page.js <<'EOF'
 import getBaseUrl from '@/lib/baseUrl';
-
 export const dynamic = 'force-dynamic'; // ensure fresh data in dev
 
 async function fetchBatches() {
