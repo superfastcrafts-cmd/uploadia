@@ -1,5 +1,9 @@
-.DS_Store
-app/batches/.DS_Store
+# Node and dependencies
+node_modules/
 
+# Build output
+.next/
+dist/
+
+# macOS
 .DS_Store
-**/.DS_Store
