@@ -1,30 +1,40 @@
+cat > app/dashboard/page.js <<'EOF'
 import getBaseUrl from '@/lib/baseUrl';
 
-export default async function DashboardPage() {
-  const base = getBaseUrl();
+export const dynamic = 'force-dynamic'; // ensure fresh data in dev
 
-  let data = [];
-  let error = null;
-
+async function fetchBatches() {
   try {
-    const res = await fetch(`${base}/api/mock/batches`, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Failed to fetch data');
-    data = await res.json();
-  } catch (err) {
-    error = err.message;
+    const url = `${getBaseUrl()}/api/mock/batches`;
+    const res = await fetch(url, { cache: 'no-store' });
+    const data = await res.json().catch(() => null);
+    // support shapes: {items:[...]} OR [...]
+    return Array.isArray(data) ? data : Array.isArray(data?.items) ? data.items : [];
+  } catch {
+    return [];
   }
+}
+
+export default async function DashboardPage() {
+  const items = await fetchBatches();
 
   return (
-    <main className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Your mock batches</h1>
-      {error && <div className="text-red-500">Error: {error}</div>}
-      <ul>
-        {data.map((batch) => (
-          <li key={batch.id} className="border-b py-2">
-            {batch.name}
-          </li>
-        ))}
-      </ul>
-    </main>
+    <div className="p-6">
+      <h1 className="text-xl font-semibold mb-4">Dashboard</h1>
+
+      {items.length === 0 ? (
+        <div className="text-sm opacity-70">No batches yet.</div>
+      ) : (
+        <ul className="grid gap-3">
+          {items.map((it, idx) => (
+            <li key={it?.id ?? idx} className="rounded border border-white/10 p-4">
+              <div className="font-medium">{it?.title ?? `Item ${idx + 1}`}</div>
+              <div className="text-xs opacity-70">id: {it?.id ?? '—'}</div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
+EOF

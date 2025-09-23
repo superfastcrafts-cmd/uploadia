@@ -1,29 +1,43 @@
+cat > app/batches/[id]/page.js <<'EOF'
 import getBaseUrl from '@/lib/baseUrl';
 
-export default async function BatchDetail({ params }) {
-  const base = getBaseUrl();
+export const dynamic = 'force-dynamic';
 
-  let batch = null;
-  let error = null;
-
+async function fetchBatch(id) {
   try {
-    const res = await fetch(`${base}/api/mock/batches/${params.id}`, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Failed to fetch batch details');
-    batch = await res.json();
-  } catch (err) {
-    error = err.message;
+    const url = `${getBaseUrl()}/api/mock/batches/${encodeURIComponent(id)}`;
+    const res = await fetch(url, { cache: 'no-store' });
+    const data = await res.json().catch(() => null);
+    return data && typeof data === 'object' ? data : {};
+  } catch {
+    return {};
   }
+}
+
+export default async function BatchPage({ params }) {
+  const batch = await fetchBatch(params?.id);
+  const rawItems = batch?.items ?? batch?.data?.items ?? [];
+  const items = Array.isArray(rawItems) ? rawItems : [];
 
   return (
-    <main className="max-w-3xl mx-auto p-6">
-      {error ? (
-        <div className="text-red-500">Error: {error}</div>
+    <div className="p-6">
+      <h1 className="text-xl font-semibold mb-4">
+        Batch {batch?.name ?? params?.id ?? ''}
+      </h1>
+
+      {items.length === 0 ? (
+        <div className="text-sm opacity-70">No items in this batch.</div>
       ) : (
-        <>
-          <h1 className="text-2xl font-bold mb-4">{batch?.name || 'Batch Details'}</h1>
-          <p className="text-gray-700">{batch?.description}</p>
-        </>
+        <ul className="grid gap-3">
+          {items.map((it, idx) => (
+            <li key={it?.sku ?? it?.id ?? idx} className="rounded border border-white/10 p-4">
+              <div className="font-medium">{it?.title ?? `Item ${idx + 1}`}</div>
+              <div className="text-xs opacity-70">sku: {it?.sku ?? '—'}</div>
+            </li>
+          ))}
+        </ul>
       )}
-    </main>
+    </div>
   );
 }
+EOF
