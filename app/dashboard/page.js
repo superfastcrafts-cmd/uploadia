@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 cat > app/dashboard/page.js <<'EOF'
 import getBaseUrl from '@/lib/baseUrl';
 export const dynamic = 'force-dynamic'; // ensure fresh data in dev
@@ -32,32 +33,27 @@ export default async function DashboardPage() {
               <div className="text-xs opacity-70">id: {it?.id ?? '—'}</div>
 =======
 'use client';
+=======
+import getBaseUrl from '@/lib/baseUrl';
+>>>>>>> 1e8669e9 (WIP: save local changes before rebase)
 
-import { useEffect, useState } from 'react';
+export default async function Page() {
+  const url = `${getBaseUrl()}/api/mock/batches`;
+  let items;
 
-export default function DashboardPage() {
-  const [batches, setBatches] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [err, setErr] = useState('');
+  try {
+    const res = await fetch(url, { cache: 'no-store' });
+    const maybeJson = res.ok ? await res.json() : null;
 
-  useEffect(() => {
-    let cancel = false;
-    (async () => {
-      try {
-        const res = await fetch('/api/mock/batches');
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        if (!cancel) setBatches(data);
-      } catch (e) {
-        if (!cancel) setErr(e.message || 'Failed to load');
-      } finally {
-        if (!cancel) setLoading(false);
-      }
-    })();
-    return () => { cancel = true; };
-  }, []);
+    if (Array.isArray(maybeJson)) items = maybeJson;
+    else if (maybeJson && Array.isArray(maybeJson.items)) items = maybeJson.items;
+    else items = [];
+  } catch {
+    items = [];
+  }
 
   return (
+<<<<<<< HEAD
     <main className="max-w-3xl mx-auto p-6">
       <h1 className="text-2xl font-semibold mb-4">Your mock batches</h1>
       {loading && <p>Loading…</p>}
@@ -69,10 +65,24 @@ export default function DashboardPage() {
               <div className="font-medium">{b.name}</div>
               <div className="text-sm opacity-70">{b.items} items</div>
 >>>>>>> d4e5e4bf (feat: fresh Next 15 app with dashboard + mock API)
+=======
+    <div className="p-6">
+      <h1 className="text-xl font-semibold mb-4">Dashboard</h1>
+
+      {items.length === 0 ? (
+        <div className="text-sm opacity-70">No batches yet.</div>
+      ) : (
+        <ul className="grid gap-3">
+          {items.map((it) => (
+            <li key={it.id} className="rounded border border-white/10 p-4">
+              <div className="font-medium">{it.name ?? `Batch ${it.id}`}</div>
+              <div className="text-xs opacity-70">{it.items?.length ?? 0} items</div>
+>>>>>>> 1e8669e9 (WIP: save local changes before rebase)
             </li>
           ))}
         </ul>
       )}
+<<<<<<< HEAD
 <<<<<<< HEAD
     </div>
   );
@@ -83,3 +93,8 @@ EOF
   );
 }
 >>>>>>> d4e5e4bf (feat: fresh Next 15 app with dashboard + mock API)
+=======
+    </div>
+  );
+}
+>>>>>>> 1e8669e9 (WIP: save local changes before rebase)
