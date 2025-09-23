@@ -1,4 +1,4 @@
-import getBaseUrl from '../../../lib/baseUrl'; // relative import
+import getBaseUrl from '@/lib/baseUrl';
 
 export default async function BatchDetail({ params }) {
   const base = getBaseUrl();
