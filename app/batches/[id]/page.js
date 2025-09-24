@@ -1,4 +1,3 @@
-cat > app/batches/[id]/page.js <<'EOF'
 import getBaseUrl from '@/lib/baseUrl';
 export const dynamic = 'force-dynamic';
 
@@ -15,18 +14,29 @@ async function fetchBatch(id) {
 }
 
 export default async function Page({ params }) {
-  const { id } = params || {};
+  const id = params?.id ?? '';
   const batch = await fetchBatch(id);
-  const items = Array.isArray(batch?.items) ? batch.items : [];
+
+  if (!batch?.id) {
+    return (
+      <div className="p-8">
+        <h1 className="text-xl font-semibold">Batch not found</h1>
+        <p className="mt-2 text-sm text-gray-500">ID: {id}</p>
+      </div>
+    );
+  }
 
   return (
-    <main style={{ padding: 24 }}>
-      <h1 style={{ fontSize: 24, marginBottom: 12 }}>Batch: {id}</h1>
-      {items.length === 0 ? <p>No items in this batch.</p> : null}
-      <pre style={{ background: '#111', color: '#eee', padding: 16, borderRadius: 8, overflowX: 'auto' }}>
-        {JSON.stringify(batch, null, 2)}
-      </pre>
-    </main>
+    <div className="p-8 space-y-4">
+      <h1 className="text-2xl font-bold">Batch {batch.id}</h1>
+      <p className="text-sm text-gray-600">Status: {batch.status}</p>
+      {Array.isArray(batch.items) && batch.items.length > 0 && (
+        <ul className="list-disc pl-6">
+          {batch.items.map((it, idx) => (
+            <li key={idx}>{it?.name ?? `Item ${idx + 1}`}</li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
-EOF
