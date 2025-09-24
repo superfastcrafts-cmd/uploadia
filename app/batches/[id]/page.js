@@ -1,7 +1,5 @@
-# from your repo root
-cat > "app/batches/[id]/page.js" <<'EOF'
+cat > app/batches/[id]/page.js <<'EOF'
 import getBaseUrl from '@/lib/baseUrl';
-
 export const dynamic = 'force-dynamic';
 
 async function fetchBatch(id) {
@@ -19,14 +17,15 @@ async function fetchBatch(id) {
 export default async function Page({ params }) {
   const { id } = params || {};
   const batch = await fetchBatch(id);
+  const items = Array.isArray(batch?.items) ? batch.items : [];
 
   return (
     <main style={{ padding: 24 }}>
       <h1 style={{ fontSize: 24, marginBottom: 12 }}>Batch: {id}</h1>
+      {items.length === 0 ? <p>No items in this batch.</p> : null}
       <pre style={{ background: '#111', color: '#eee', padding: 16, borderRadius: 8, overflowX: 'auto' }}>
         {JSON.stringify(batch, null, 2)}
       </pre>
-      {!batch || Object.keys(batch).length === 0 ? <p>No items in this batch.</p> : null}
     </main>
   );
 }
