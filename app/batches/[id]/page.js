@@ -1,4 +1,3 @@
-cat > "app/batches/[id]/page.js" <<'EOF'
 import getBaseUrl from '@/lib/baseUrl';
 export const dynamic = 'force-dynamic';
 
@@ -41,4 +40,3 @@ export default async function Page({ params }) {
     </div>
   );
 }
-EOF
