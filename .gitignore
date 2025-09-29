@@ -14,3 +14,11 @@ node_modules/
 # macOS
 .DS_Store
 **/.DS_Store
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# macOS
+.DS_Store
+app/**/.DS_Store
